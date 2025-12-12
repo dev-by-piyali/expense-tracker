@@ -1,0 +1,55 @@
+@import "./base.scss";
+
+#app {
+  width: 70%;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+button {
+  margin: 8px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+  }
+}
+
+// Autocomplete Dropdown Menu - Dark Mode
+@media (prefers-color-scheme: dark) {
+  .v-overlay__content {
+    .v-list {
+      background: #2a2826 !important;
+      
+      .v-list-item {
+        color: #d0d0d0 !important;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.08) !important;
+        }
+      }
+      
+      .v-list-item-title {
+        color: inherit !important;
+      }
+    }
+  }
+}
