@@ -1,11 +1,11 @@
 <script setup>
-import Welcome from "./components/Welcome.vue";
+import AddIncomeExpense from "@/components/AddIncomeExpense.vue";
 </script>
 
 <template>
   <header>
     <h1>Expense Tracker</h1>
-    <Welcome />
+    <AddIncomeExpense />
   </header>
 
   <main></main>
