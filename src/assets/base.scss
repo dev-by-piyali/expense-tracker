@@ -1,114 +1,52 @@
-// COLOR PALETTE - Warm Terracotta & Sage Theme
-$colors: (
+:root {
+  // COLOR PALETTE - Warm Terracotta & Sage Theme
   // Neutrals - Warm undertones
-  white: #fefdfb,
-  white-soft: #faf8f5,
-  white-mute: #f3f0eb,
+  --color-white: #fefdfb;
+  --color-white-soft: #faf8f5;
+  --color-white-mute: #f3f0eb;
 
-  black: #1a1918,
-  black-soft: #252321,
-  black-mute: #2f2d2a,
+  --color-black: #1a1918;
+  --color-black-soft: #252321;
+  --color-black-mute: #2f2d2a;
 
   // Accent Colors
-  terracotta: #c4704b,
-  terracotta-light: #e8a889,
-  terracotta-dark: #9e5535,
+  --color-terracotta: #c4704b;
+  --color-terracotta-light: #e8a889;
+  --color-terracotta-dark: #9e5535;
 
-  sage: #7d9b84,
-  sage-light: #a8c4ae,
-  sage-dark: #5c7a63,
+  --color-sage: #7d9b84;
+  --color-sage-light: #a8c4ae;
+  --color-sage-dark: #5c7a63;
 
-  gold: #d4a853,
-  gold-light: #e8cb8a,
+  --color-gold: #d4a853;
+  --color-gold-light: #e8cb8a;
 
   // Functional
-  success: #6b9b76,
-  warning: #d4a853,
-  error: #c75c5c,
-  info: #5c8dc7
-);
+  --color-success: #6b9b76;
+  --color-warning: #d4a853;
+  --color-error: #c75c5c;
+  --color-info: #5c8dc7;
 
-// Helper function to get colors
-@function color($key) {
-  @return map-get($colors, $key);
-}
+  // Semantic Colors - Light Theme (Default)
+  --color-background: #fefdfb;
+  --color-background-soft: #faf8f5;
+  --color-background-mute: #f3f0eb;
 
-// LIGHT THEME VARIABLES
+  --color-surface: #ffffff;
+  --color-surface-variant: #f7f4ef;
 
-$theme-light: (
-  background: color(white),
-  background-soft: color(white-soft),
-  background-mute: color(white-mute),
-  surface: #ffffff,
-  surface-variant: #f7f4ef,
+  --color-border: rgba(26, 25, 24, 0.08);
+  --color-border-hover: rgba(26, 25, 24, 0.16);
 
-  border: rgba(26, 25, 24, 0.08),
-  border-hover: rgba(26, 25, 24, 0.16),
-  text-primary: color(black),
-  text-secondary: rgba(26, 25, 24, 0.7),
-  text-muted: rgba(26, 25, 24, 0.45),
-  heading: color(black),
-  accent: color(terracotta),
-  accent-soft: rgba(196, 112, 75, 0.12),
-  shadow-color: rgba(26, 25, 24, 0.08),
-);
+  --color-text: #1a1918;
+  --color-text-secondary: rgba(26, 25, 24, 0.7);
+  --color-text-muted: rgba(26, 25, 24, 0.45);
+  --color-heading: #1a1918;
 
-// DARK THEME VARIABLES
+  --color-accent: #c4704b;
+  --color-accent-soft: rgba(196, 112, 75, 0.12);
 
-$theme-dark: (
-  background: color(black),
-  background-soft: color(black-soft),
-  background-mute: color(black-mute),
-  surface: #2a2826,
-  surface-variant: #353230,
-
-  border: rgba(255, 253, 251, 0.08),
-  border-hover: rgba(255, 253, 251, 0.16),
-  text-primary: color(white),
-  text-secondary: rgba(254, 253, 251, 0.75),
-  text-muted: rgba(254, 253, 251, 0.45),
-  heading: color(white),
-  accent: color(terracotta-light),
-  accent-soft: rgba(232, 168, 137, 0.15),
-  shadow-color: rgba(0, 0, 0, 0.4),
-);
-
-// CSS CUSTOM PROPERTIES
-
-:root {
-  // Color Palette
-  --color-white: #{color(white)};
-  --color-white-soft: #{color(white-soft)};
-  --color-white-mute: #{color(white-mute)};
-
-  --color-black: #{color(black)};
-  --color-black-soft: #{color(black-soft)};
-  --color-black-mute: #{color(black-mute)};
-
-  --color-terracotta: #{color(terracotta)};
-  --color-sage: #{color(sage)};
-  --color-gold: #{color(gold)};
-
-  // Semantic - Light Theme (default)
-  --color-background: #{map-get($theme-light, background)};
-  --color-background-soft: #{map-get($theme-light, background-soft)};
-  --color-background-mute: #{map-get($theme-light, background-mute)};
-
-  --color-surface: #{map-get($theme-light, surface)};
-  --color-surface-variant: #{map-get($theme-light, surface-variant)};
-
-  --color-border: #{map-get($theme-light, border)};
-  --color-border-hover: #{map-get($theme-light, border-hover)};
-
-  --color-text: #{map-get($theme-light, text-primary)};
-  --color-text-secondary: #{map-get($theme-light, text-secondary)};
-  --color-text-muted: #{map-get($theme-light, text-muted)};
-  --color-heading: #{map-get($theme-light, heading)};
-
-  --color-accent: #{map-get($theme-light, accent)};
-  --color-accent-soft: #{map-get($theme-light, accent-soft)};
-
-  --shadow-color: #{map-get($theme-light, shadow-color)};
+  --shadow-color: rgba(26, 25, 24, 0.08);
 
   // Shadows
   --shadow-xs: 0 1px 2px var(--shadow-color);
@@ -131,29 +69,27 @@ $theme-dark: (
   --radius-full: 9999px;
 }
 
-// DARK MODE
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #{map-get($theme-dark, background)};
-    --color-background-soft: #{map-get($theme-dark, background-soft)};
-    --color-background-mute: #{map-get($theme-dark, background-mute)};
+    --color-background: #1a1918;
+    --color-background-soft: #252321;
+    --color-background-mute: #2f2d2a;
 
-    --color-surface: #{map-get($theme-dark, surface)};
-    --color-surface-variant: #{map-get($theme-dark, surface-variant)};
+    --color-surface: #2a2826;
+    --color-surface-variant: #353230;
 
-    --color-border: #{map-get($theme-dark, border)};
-    --color-border-hover: #{map-get($theme-dark, border-hover)};
+    --color-border: rgba(255, 253, 251, 0.08);
+    --color-border-hover: rgba(255, 253, 251, 0.16);
 
-    --color-text: #{map-get($theme-dark, text-primary)};
-    --color-text-secondary: #{map-get($theme-dark, text-secondary)};
-    --color-text-muted: #{map-get($theme-dark, text-muted)};
-    --color-heading: #{map-get($theme-dark, heading)};
+    --color-text: #fefdfb;
+    --color-text-secondary: rgba(254, 253, 251, 0.75);
+    --color-text-muted: rgba(254, 253, 251, 0.45);
+    --color-heading: #fefdfb;
 
-    --color-accent: #{map-get($theme-dark, accent)};
-    --color-accent-soft: #{map-get($theme-dark, accent-soft)};
+    --color-accent: #e8a889;
+    --color-accent-soft: rgba(232, 168, 137, 0.15);
 
-    --shadow-color: #{map-get($theme-dark, shadow-color)};
+    --shadow-color: rgba(0, 0, 0, 0.4);
   }
 }
 
