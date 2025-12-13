@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
+import { useExpenseStore } from "@/stores/expenseStore";
 
-const form = ref(null);
+const expenseStore = useExpenseStore();
 const formData = ref({
   amount: null,
   description: "",
@@ -30,8 +31,8 @@ const expenseCategories = [
 ];
 
 const sectionType = computed(() => {
-  if (incomeFlag.value) return "Income";
-  if (expenseFlag.value) return "Expense";
+  if (incomeFlag.value) return "income";
+  if (expenseFlag.value) return "expense";
   return null;
 });
 
@@ -52,8 +53,9 @@ const closeSection = () => {
   expenseFlag.value = false;
 };
 
-const saveSection = () => {
+const saveSection = (type) => {
   console.log("formData", formData.value);
+  expenseStore.addItem(formData.value, type);
   closeSection();
 };
 
@@ -62,10 +64,16 @@ const resetForm = () => {
   formData.value.selectedCategories = [];
   formData.value.description = "";
 };
+
+const allowOnlyNumbers = (event) => {
+  if (["e", "E", "+", "-"].includes(event.key)) {
+    event.preventDefault();
+  }
+};
 </script>
 
 <template>
-  <div class="pa-6">
+  <div class="pb-6">
     <div class="d-flex flex-wrap ga-4 justify-center">
       <v-btn
         class="action-btn action-btn--income text-none text-subtitle-1 font-weight-bold"
@@ -107,7 +115,7 @@ const resetForm = () => {
               :icon="incomeFlag ? 'mdi-arrow-down-bold-circle' : 'mdi-arrow-up-bold-circle'"
               size="28"
             />
-            <span class="text-h6 font-weight-bold">
+            <span class="text-h6 text-capitalize font-weight-bold">
               {{ sectionTitle }}
             </span>
           </div>
@@ -148,6 +156,7 @@ const resetForm = () => {
             variant="outlined"
             density="comfortable"
             rounded="lg"
+            @keypress="allowOnlyNumbers"
             class="themed-input mt-4"
           />
 
@@ -175,8 +184,9 @@ const resetForm = () => {
             class="text-none text-subtitle-1 save-btn"
             :class="incomeFlag ? 'save-btn--income' : 'save-btn--expense'"
             variant="flat"
+            :disabled="!formData.amount || !formData.selectedCategories.length"
             prepend-icon="mdi-check"
-            @click="saveSection"
+            @click="saveSection(sectionType)"
           >
             Save {{ sectionTitle }}
           </v-btn>
@@ -223,7 +233,6 @@ const resetForm = () => {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
-  max-width: 600px;
   margin-inline: auto;
 
   &--income {
