@@ -6,11 +6,23 @@ import ExpenseHistory from "@/components/ExpenseHistory.vue";
 <template>
   <header>
     <h1>Expense Tracker</h1>
-    <AddIncomeExpense />
-    <ExpenseHistory />
   </header>
 
-  <main></main>
+  <main class="main-section flex-grow-1 ga-4 mt-6">
+    <AddIncomeExpense />
+    <ExpenseHistory />
+  </main>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.main-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+@media (max-width: 960px) {
+  .main-section {
+    grid-template: none;
+  }
+}
+</style>

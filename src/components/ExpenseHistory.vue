@@ -8,7 +8,7 @@ const headers = [
   { title: "Type", key: "type", width: "80px" },
   { title: "Category", key: "selectedCategories" },
   { title: "Amount", key: "amount", width: "150px", align: "end" },
-  { title: "Description", key: "description" },
+  { title: "Description", key: "description", align: "center" },
   { title: "", key: "actions", width: "80px", sortable: false },
 ];
 
@@ -50,10 +50,10 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
 </script>
 
 <template>
-  <v-card class="transactions-card overflow-hidden" elevation="0" rounded="xl">
+  <v-card class="transactions-card d-flex flex-column overflow-hidden" elevation="0" rounded="xl">
     <!-- Header -->
-    <v-card-title class="card-header d-flex align-center justify-space-between px-6 py-4">
-      <div class="d-flex align-center ga-3">
+    <v-card-title class="card-header d-block d-md-flex align-center justify-space-between px-6 py-4">
+      <div class="d-flex align-center ga-3 mb-3">
         <div class="header-icon d-flex align-center justify-center rounded-lg">
           <v-icon icon="mdi-swap-vertical-bold" size="24" color="white" />
         </div>
@@ -85,9 +85,7 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
     <v-data-table
       :headers="headers"
       :items="expenseStore.combinedList"
-      :items-per-page="10"
-      class="transactions-table"
-      hover
+      class="transactions-table h-100"
     >
       <!-- Type Column - Icon only, color-coded -->
       <template #item.type="{ item }">
@@ -123,14 +121,14 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
           class="amount-text font-weight-bold"
           :class="item.type === 'income' ? 'amount-text--income' : 'amount-text--expense'"
         >
-          {{ item.type === "income" ? "+" : "" }}₹{{ formatAmount(item.amount) }}
+          {{ item.type === "income" ? "+" : "-" }}₹{{ formatAmount(item.amount) }}
         </span>
       </template>
 
       <!-- Description Column -->
       <template #item.description="{ item }">
         <span class="description-text text-body-2">
-          {{ item.description || "—" }}
+          {{ item.description || "--" }}
         </span>
       </template>
 
@@ -176,7 +174,7 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
                 :icon="netBalance >= 0 ? 'mdi-arrow-up-circle' : 'mdi-arrow-down-circle'"
                 size="20"
               />
-              <span class="amount-text">₹{{ formatAmount(netBalance) }}</span>
+              <span class="amount-text">{{ netBalance > 0 ? "+" : "" }}₹{{ formatAmount(netBalance) }}</span>
             </div>
           </div>
         </div>
@@ -186,6 +184,12 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
 </template>
 
 <style lang="scss" scoped>
+:deep(.v-table__wrapper) {
+  height: 400px;
+  @media (min-width: 960px) {
+    height: 500px;
+  }
+}
 :deep(.v-table .v-data-table__th) {
   @media (prefers-color-scheme: dark) {
     color: var(--color-white-mute);
@@ -205,6 +209,11 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
       rgba(125, 155, 132, 0.12) 0%,
       rgba(196, 112, 75, 0.08) 100%
     );
+  }
+
+  @media (max-width: 960px) {
+    display: block !important;
+    place-items: center;
   }
 }
 

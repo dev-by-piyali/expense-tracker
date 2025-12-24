@@ -73,8 +73,8 @@ const allowOnlyNumbers = (event) => {
 </script>
 
 <template>
-  <div class="pb-6">
-    <div class="d-flex flex-wrap ga-4 justify-center">
+  <div>
+    <div class="d-flex flex-md-wrap ga-4 justify-center">
       <v-btn
         class="action-btn action-btn--income text-none text-subtitle-1 font-weight-bold"
         variant="flat"
