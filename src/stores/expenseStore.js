@@ -1,10 +1,24 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useExpenseStore = defineStore("expenseStore", () => {
   const incomeList = ref([]);
   const expenseList = ref([]);
   const combinedList = ref([]);
+
+  const totalIncome = computed(() =>
+    combinedList.value
+      .filter((item) => item.type === "income")
+      .reduce((sum, item) => sum + Number(item.amount), 0),
+  );
+
+  const totalExpense = computed(() =>
+    combinedList.value
+      .filter((item) => item.type === "expense")
+      .reduce((sum, item) => sum + Number(item.amount), 0),
+  );
+
+  const netBalance = computed(() => totalIncome.value - totalExpense.value);
 
   const addItem = (data, type) => {
     const generateRandomId = () => {
@@ -35,6 +49,9 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     incomeList,
     expenseList,
     combinedList,
+    totalIncome,
+    totalExpense,
+    netBalance,
     addItem,
     removeItem,
     updateItem,

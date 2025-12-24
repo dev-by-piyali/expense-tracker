@@ -34,19 +34,6 @@ const formatAmount = (amount) =>
     maximumFractionDigits: 2,
   });
 
-const totalIncome = computed(() =>
-  expenseStore.combinedList
-    .filter((item) => item.type === "income")
-    .reduce((sum, item) => sum + Number(item.amount), 0),
-);
-
-const totalExpense = computed(() =>
-  expenseStore.combinedList
-    .filter((item) => item.type === "expense")
-    .reduce((sum, item) => sum + Number(item.amount), 0),
-);
-
-const netBalance = computed(() => totalIncome.value - totalExpense.value);
 </script>
 
 <template>
@@ -68,13 +55,13 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
           class="summary-pill summary-pill--income d-flex align-center ga-1 px-3 py-1 rounded-pill"
         >
           <v-icon icon="mdi-arrow-down-bold" size="16" />
-          <span class="font-weight-bold">₹{{ formatAmount(totalIncome) }}</span>
+          <span class="font-weight-bold">₹{{ formatAmount(expenseStore.totalIncome) }}</span>
         </div>
         <div
           class="summary-pill summary-pill--expense d-flex align-center ga-1 px-3 py-1 rounded-pill"
         >
           <v-icon icon="mdi-arrow-up-bold" size="16" />
-          <span class="font-weight-bold">₹{{ formatAmount(totalExpense) }}</span>
+          <span class="font-weight-bold">₹{{ formatAmount(expenseStore.totalExpense) }}</span>
         </div>
       </div>
     </v-card-title>
@@ -164,17 +151,17 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
         <div class="table-footer d-flex justify-end pa-4">
           <div
             class="net-balance d-flex flex-column align-end"
-            :class="netBalance >= 0 ? 'net-balance--positive' : 'net-balance--negative'"
+            :class="expenseStore.netBalance >= 0 ? 'net-balance--positive' : 'net-balance--negative'"
           >
             <span class="balance-label text-caption font-weight-bold text-uppercase">
               Net Balance
             </span>
             <div class="d-flex align-center ga-1 text-h6 font-weight-bold">
               <v-icon
-                :icon="netBalance >= 0 ? 'mdi-arrow-up-circle' : 'mdi-arrow-down-circle'"
+                :icon="expenseStore.netBalance >= 0 ? 'mdi-arrow-up-circle' : 'mdi-arrow-down-circle'"
                 size="20"
               />
-              <span class="amount-text">{{ netBalance > 0 ? "+" : "" }}₹{{ formatAmount(netBalance) }}</span>
+              <span class="amount-text">{{ expenseStore.netBalance > 0 ? "+" : "" }}₹{{ formatAmount(expenseStore.netBalance) }}</span>
             </div>
           </div>
         </div>
@@ -184,12 +171,6 @@ const netBalance = computed(() => totalIncome.value - totalExpense.value);
 </template>
 
 <style lang="scss" scoped>
-:deep(.v-table__wrapper) {
-  height: 400px;
-  @media (min-width: 960px) {
-    height: 500px;
-  }
-}
 :deep(.v-table .v-data-table__th) {
   @media (prefers-color-scheme: dark) {
     color: var(--color-white-mute);
