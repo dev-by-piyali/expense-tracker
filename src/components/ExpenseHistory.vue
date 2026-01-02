@@ -6,7 +6,7 @@ const expenseStore = useExpenseStore();
 
 const headers = [
   { title: "Type", key: "type", width: "80px" },
-  { title: "Category", key: "selectedCategories" },
+  { title: "Category", key: "selectedCategory" },
   { title: "Amount", key: "amount", width: "150px", align: "end" },
   { title: "Description", key: "description", align: "center" },
   { title: "", key: "actions", width: "80px", sortable: false },
@@ -33,13 +33,14 @@ const formatAmount = (amount) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-
 </script>
 
 <template>
   <v-card class="transactions-card d-flex flex-column overflow-hidden" elevation="0" rounded="xl">
     <!-- Header -->
-    <v-card-title class="card-header d-block d-md-flex align-center justify-space-between px-6 py-4">
+    <v-card-title
+      class="card-header d-block d-md-flex align-center justify-space-between px-6 py-4"
+    >
       <div class="d-flex align-center ga-3 mb-3">
         <div class="header-icon d-flex align-center justify-center rounded-lg">
           <v-icon icon="mdi-swap-vertical-bold" size="24" color="white" />
@@ -89,16 +90,11 @@ const formatAmount = (amount) =>
       </template>
 
       <!-- Category Column - Grey chips -->
-      <template #item.selectedCategories="{ item }">
+      <template #item.selectedCategory="{ item }">
         <div class="d-flex flex-wrap ga-1">
-          <v-chip
-            v-for="category in item.selectedCategories"
-            :key="category"
-            size="small"
-            variant="flat"
-          >
-            <v-icon :icon="getCategoryIcon(category)" size="14" start />
-            {{ category }}
+          <v-chip size="small" variant="flat">
+            <v-icon :icon="getCategoryIcon(item.selectedCategory)" size="14" start />
+            {{ item.selectedCategory }}
           </v-chip>
         </div>
       </template>
@@ -152,17 +148,25 @@ const formatAmount = (amount) =>
         <div class="table-footer d-flex justify-end pa-4">
           <div
             class="net-balance d-flex flex-column align-end"
-            :class="expenseStore.netBalance >= 0 ? 'net-balance--positive' : 'net-balance--negative'"
+            :class="
+              expenseStore.netBalance >= 0 ? 'net-balance--positive' : 'net-balance--negative'
+            "
           >
             <span class="balance-label text-caption font-weight-bold text-uppercase">
               Net Balance
             </span>
             <div class="d-flex align-center ga-1 text-h6 font-weight-bold">
               <v-icon
-                :icon="expenseStore.netBalance >= 0 ? 'mdi-arrow-up-circle' : 'mdi-arrow-down-circle'"
+                :icon="
+                  expenseStore.netBalance >= 0 ? 'mdi-arrow-up-circle' : 'mdi-arrow-down-circle'
+                "
                 size="20"
               />
-              <span class="amount-text">{{ expenseStore.netBalance > 0 ? "+" : "" }}₹{{ formatAmount(expenseStore.netBalance) }}</span>
+              <span class="amount-text"
+                >{{ expenseStore.netBalance > 0 ? "+" : "" }}₹{{
+                  formatAmount(expenseStore.netBalance)
+                }}</span
+              >
             </div>
           </div>
         </div>

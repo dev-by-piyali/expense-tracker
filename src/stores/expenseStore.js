@@ -15,8 +15,8 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     combinedList.value
       .filter((item) => item.type === type)
       .forEach((item) => {
-        if (item.selectedCategories?.length) {
-          item.selectedCategories.forEach((cat) => categories.add(cat));
+          if (item.selectedCategory) {
+            categories.add(item.selectedCategory);
         }
       });
     return Array.from(categories);
@@ -34,11 +34,9 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     combinedList.value
       .filter((item) => item.type === type)
       .forEach((item) => {
-        if (item.selectedCategories?.length) {
-          item.selectedCategories.forEach((cat) => {
-            const currentAmount = categoryAmounts.get(cat) || 0;
-            categoryAmounts.set(cat, currentAmount + Number(item.amount));
-          });
+          if (item.selectedCategory) {
+            const currentAmount = categoryAmounts.get(item.selectedCategory) || 0;
+            categoryAmounts.set(item.selectedCategory, currentAmount + Number(item.amount));
         }
       });
 
@@ -79,7 +77,7 @@ export const useExpenseStore = defineStore("expenseStore", () => {
       date: currentTimestamp,
       amount: Number(data.amount),
       description: data.description || "",
-      selectedCategories: data.selectedCategories || [],
+      selectedCategory: data.selectedCategory || "",
     };
 
     combinedList.value.push(newTransaction);

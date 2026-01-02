@@ -6,7 +6,7 @@ const expenseStore = useExpenseStore();
 const formData = ref({
   amount: null,
   description: "",
-  selectedCategories: [],
+  selectedCategory: null,
 });
 const addSection = ref(false);
 const incomeFlag = ref(false);
@@ -61,7 +61,7 @@ const saveSection = (type) => {
 
 const resetForm = () => {
   formData.value.amount = null;
-  formData.value.selectedCategories = [];
+  formData.value.selectedCategory = null;
   formData.value.description = "";
 };
 
@@ -132,15 +132,13 @@ const allowOnlyNumbers = (event) => {
 
         <v-card-text class="pa-6">
           <v-autocomplete
-            v-model="formData.selectedCategories"
+            v-model="formData.selectedCategory"
             :items="incomeFlag ? incomeCategories : expenseCategories"
             label="Category"
-            placeholder="Select categories..."
+            placeholder="Select category"
             prepend-inner-icon="mdi-tag-multiple"
             clearable
             chips
-            multiple
-            closable-chips
             variant="outlined"
             density="comfortable"
             rounded="lg"
@@ -184,7 +182,7 @@ const allowOnlyNumbers = (event) => {
             class="text-none text-subtitle-1 save-btn"
             :class="incomeFlag ? 'save-btn--income' : 'save-btn--expense'"
             variant="flat"
-            :disabled="!formData.amount || !formData.selectedCategories.length"
+            :disabled="!formData.amount || !formData?.selectedCategory?.length"
             prepend-icon="mdi-check"
             @click="saveSection(sectionType)"
           >
@@ -366,14 +364,6 @@ const allowOnlyNumbers = (event) => {
       background: var(--color-surface);
       color: var(--color-text-secondary);
       border: 1px solid rgba(196, 112, 75, 0.4);
-
-      .v-chip__close {
-        color: #e8a889;
-
-        &:hover {
-          color: #ffffff;
-        }
-      }
     }
   }
 }
@@ -386,14 +376,6 @@ const allowOnlyNumbers = (event) => {
         background: var(--color-surface);
         color: var(--color-text-secondary);
         border: 1px solid rgba(125, 155, 132, 0.4);
-
-        .v-chip__close {
-          color: #a8c4ae;
-
-          &:hover {
-            color: #ffffff;
-          }
-        }
       }
     }
   }
