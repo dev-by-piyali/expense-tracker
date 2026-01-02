@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import Chart from "chart.js/auto";
 import { useExpenseStore } from "@/stores/expenseStore";
 
@@ -15,6 +15,12 @@ const incomeChartCanvas = ref(null);
 let expenseVsIncomeChart = null;
 let categoryChart = null;
 let incomeChart = null;
+
+const formatAmount = (amount) =>
+  Number(amount).toLocaleString("en-IN", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
 // Color Palette
 const colors = {
@@ -66,6 +72,20 @@ const chartDefaults = {
         bottom: 20,
       },
     },
+    tooltip: {
+      callbacks: {
+        title: function () {
+          return null;
+        },
+        label: function (context) {
+          let label = context.label?.split("-")[0] || "";
+          if (context.raw !== null) {
+            label += ` - ₹${formatAmount(context.raw)}`;
+          }
+          return label;
+        },
+      },
+    },
   },
 };
 
@@ -106,7 +126,9 @@ const expenseVsIncomeChartConfig = {
 const expenseChartConfig = {
   type: "doughnut",
   data: {
-    labels: expenseStore.expenseCategories,
+    labels: expenseStore.expenseCategories.map((item, i) => {
+      return `${item} - ₹${formatAmount(expenseStore.expenseAmountsByCategory?.[i] || 0)}`;
+    }),
     datasets: [
       {
         backgroundColor: expenseCategoriesPalette,
@@ -132,7 +154,9 @@ const expenseChartConfig = {
 const incomeChartConfig = {
   type: "doughnut",
   data: {
-    labels: expenseStore.incomeCategories,
+    labels: expenseStore.incomeCategories.map((item, i) => {
+      return `${item} - ₹${formatAmount(expenseStore.incomeAmountsByCategory?.[i] || 0)}`;
+    }),
     datasets: [
       {
         backgroundColor: incomeCategoriesPalette,
