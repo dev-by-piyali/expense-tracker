@@ -1,16 +1,29 @@
 <script setup>
+import { ref } from "vue";
 import AddIncomeExpense from "@/components/AddIncomeExpense.vue";
 import ExpenseHistory from "@/components/ExpenseHistory.vue";
+import Dashboard from "@/components/Dashboard.vue";
+
+const showDashboard = ref(false);
 </script>
 
 <template>
-  <header>
-    <h1>Expense Tracker</h1>
+  <header class="w-100 d-flex align-center justify-space-between pa-4">
+    <h1 class="w-100">Expense Tracker</h1>
+    <v-icon
+      class="insight cursor-pointer d-none d-md-block"
+      icon="mdi-chart-areaspline"
+      size="30"
+      @click="showDashboard = !showDashboard"
+    />
   </header>
 
-  <main class="main-section flex-grow-1 ga-4 mt-6">
+  <main v-if="!showDashboard" class="main-section flex-grow-1 ga-4 mt-6">
     <AddIncomeExpense />
     <ExpenseHistory />
+  </main>
+  <main v-else class="flex-grow-1 ga-4 mt-6 w-100">
+    <Dashboard />
   </main>
 </template>
 
@@ -18,6 +31,10 @@ import ExpenseHistory from "@/components/ExpenseHistory.vue";
 .main-section {
   display: grid;
   grid-template-columns: 1fr 2fr;
+}
+
+.insight {
+  color: #5c7a63;
 }
 
 @media (max-width: 960px) {

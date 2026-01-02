@@ -20,6 +20,80 @@ export const useExpenseStore = defineStore("expenseStore", () => {
 
   const netBalance = computed(() => totalIncome.value - totalExpense.value);
 
+  const expenseCategories = computed(() => {
+    const categories = new Set();
+    combinedList.value
+      .filter((item) => item.type === "expense")
+      .forEach((item) => {
+        if (item.selectedCategories && Array.isArray(item.selectedCategories)) {
+          item.selectedCategories.forEach((cat) => categories.add(cat));
+        }
+      });
+    return Array.from(categories);
+  });
+
+  const incomeCategories = computed(() => {
+    const categories = new Set();
+    combinedList.value
+      .filter((item) => item.type === "income")
+      .forEach((item) => {
+        if (item.selectedCategories && Array.isArray(item.selectedCategories)) {
+          item.selectedCategories.forEach((cat) => categories.add(cat));
+        }
+      });
+    return Array.from(categories);
+  });
+
+  const expenseAmountsByCategory = computed(() => {
+    const categoryAmounts = {};
+    expenseCategories.value.forEach((cat) => {
+      categoryAmounts[cat] = 0;
+    });
+    combinedList.value
+      .filter((item) => item.type === "expense")
+      .forEach((item) => {
+        if (item.selectedCategories && Array.isArray(item.selectedCategories)) {
+          item.selectedCategories.forEach((cat) => {
+            categoryAmounts[cat] += Number(item.amount);
+          });
+        }
+      });
+    return Object.values(categoryAmounts);
+  });
+
+  const incomeAmountsByCategory = computed(() => {
+    const categoryAmounts = {};
+    incomeCategories.value.forEach((cat) => {
+      categoryAmounts[cat] = 0;
+    });
+    combinedList.value
+      .filter((item) => item.type === "income")
+      .forEach((item) => {
+        if (item.selectedCategories && Array.isArray(item.selectedCategories)) {
+          item.selectedCategories.forEach((cat) => {
+            categoryAmounts[cat] += Number(item.amount);
+          });
+        }
+      });
+    return Object.values(categoryAmounts);
+  });
+
+  const expenseCategoriesPalette = [
+    "#f4a261",
+    "#e76f51",
+    "#2a9d8f",
+    "#e9c46a",
+    "#264653",
+    "#8ab17d",
+    "#d4a574",
+    "#e8b4b8",
+    "#a8dadc",
+    "#457b9d",
+    "#1d3557",
+    "#f1faee",
+    "#e4ac1dff",
+  ];
+
   const addItem = (data, type) => {
     const generateRandomId = () => {
       return `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
@@ -52,6 +126,11 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     totalIncome,
     totalExpense,
     netBalance,
+    expenseCategories,
+    incomeCategories,
+    incomeAmountsByCategory,
+    expenseAmountsByCategory,
+    expenseCategoriesPalette,
     addItem,
     removeItem,
     updateItem,

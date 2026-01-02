@@ -73,6 +73,7 @@ const formatAmount = (amount) =>
       :headers="headers"
       :items="expenseStore.combinedList"
       class="transactions-table h-100"
+      items-per-page="-1"
     >
       <!-- Type Column - Icon only, color-coded -->
       <template #item.type="{ item }">
@@ -171,6 +172,12 @@ const formatAmount = (amount) =>
 </template>
 
 <style lang="scss" scoped>
+:deep(.v-table__wrapper) {
+  height: 400px;
+  @media (min-width: 960px) {
+    height: 500px;
+  }
+}
 :deep(.v-table .v-data-table__th) {
   @media (prefers-color-scheme: dark) {
     color: var(--color-white-mute);
