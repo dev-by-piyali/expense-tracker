@@ -170,6 +170,34 @@ onMounted(() => {
   }
 });
 
+watch(
+  () => [expenseStore.currentMonth],
+  ([newMonth]) => {
+    if (expenseVsIncomeChart) {
+      expenseVsIncomeChart.data.datasets[0].data = [
+        expenseStore.totalIncome,
+        expenseStore.totalExpense,
+      ];
+      expenseVsIncomeChart.update();
+    }
+    if (categoryChart) {
+      categoryChart.data.labels = expenseStore.expenseCategories.map((item, i) => {
+        return `${item} - ₹${formatAmount(expenseStore.expenseAmountsByCategory?.[i] || 0)}`;
+      });
+      categoryChart.data.datasets[0].data = expenseStore.expenseAmountsByCategory;
+      categoryChart.update();
+    }
+    if (incomeChart) {
+      incomeChart.data.labels = expenseStore.incomeCategories.map((item, i) => {
+        return `${item} - ₹${formatAmount(expenseStore.incomeAmountsByCategory?.[i] || 0)}`;
+      });
+      incomeChart.data.datasets[0].data = expenseStore.incomeAmountsByCategory;
+      incomeChart.update();
+    }
+  },
+  { deep: true },
+);
+
 onUnmounted(() => {
   expenseVsIncomeChart?.destroy();
   categoryChart?.destroy();

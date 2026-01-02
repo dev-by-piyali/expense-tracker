@@ -72,7 +72,7 @@ const formatAmount = (amount) =>
     <!-- Data Table -->
     <v-data-table
       :headers="headers"
-      :items="expenseStore.combinedList"
+      :items="expenseStore.groupByMonthData[expenseStore.currentMonth] || []"
       class="transactions-table h-100"
       items-per-page="-1"
     >

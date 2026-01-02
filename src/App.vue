@@ -3,13 +3,44 @@ import { ref } from "vue";
 import AddIncomeExpense from "@/components/AddIncomeExpense.vue";
 import ExpenseHistory from "@/components/ExpenseHistory.vue";
 import Dashboard from "@/components/Dashboard.vue";
+import { useExpenseStore } from "@/stores/expenseStore";
 
+const expenseStore = useExpenseStore();
 const showDashboard = ref(false);
+
+const MONTHS = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
+};
+
+const handleMonthChange = (val) => {
+  const monthKey = Object.keys(MONTHS).find((key) => MONTHS[key] === val);
+  expenseStore.setCurrentMonth(monthKey);
+};
 </script>
 
 <template>
   <header class="w-100 d-flex align-center justify-space-between pa-4">
     <h1 class="w-100">Expense Tracker</h1>
+    <v-select
+      :items="Object.values(MONTHS)"
+      :model-value="MONTHS[expenseStore.currentMonth]"
+      @update:model-value="handleMonthChange"
+      density="compact"
+      prepend-inner-icon="mdi-calendar"
+      hide-details
+      class="w-25 mx-2 month-chip"
+    ></v-select>
     <v-icon
       class="insight cursor-pointer d-none d-md-block"
       icon="mdi-chart-areaspline"
