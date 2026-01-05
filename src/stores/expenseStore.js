@@ -5,9 +5,23 @@ export const useExpenseStore = defineStore("expenseStore", () => {
   const currentMonth = ref(new Date().getMonth() + 1);
   const combinedList = ref([]);
 
+  const MONTHS = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
+  };
+
   //Helper function to set current month
   const setCurrentMonth = (month) => {
-    console.log("Setting current month to:", month);
     currentMonth.value = month;
   };
 
@@ -93,6 +107,21 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     }, {});
   });
 
+  const groupByMonthTotal = computed(() => {
+    const totals = {}; //{ monthKey: { income: number, expense: number } }
+    Object.keys(MONTHS).forEach((monthKey) => {
+      const monthData = groupByMonthData.value[monthKey] || [];
+      const incomeTotal = monthData
+        .filter((item) => item.type === "income")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+      const expenseTotal = monthData
+        .filter((item) => item.type === "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+      totals[monthKey] = { income: incomeTotal, expense: expenseTotal };
+    });
+    return totals;
+  });
+
   // Actions
   const addItem = (data, type) => {
     const month = currentMonth.value || new Date().getMonth() + 1;
@@ -115,6 +144,7 @@ export const useExpenseStore = defineStore("expenseStore", () => {
   const updateItem = (value, type) => {};
 
   return {
+    MONTHS,
     incomeList,
     expenseList,
     combinedList,
@@ -127,6 +157,7 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     incomeAmountsByCategory,
     expenseAmountsByCategory,
     groupByMonthData,
+    groupByMonthTotal,
     addItem,
     removeItem,
     updateItem,

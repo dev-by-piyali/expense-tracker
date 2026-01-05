@@ -10,11 +10,13 @@ const expenseStore = useExpenseStore();
 const expenseVsIncomeChartCanvas = ref(null);
 const expenseChartCanvas = ref(null);
 const incomeChartCanvas = ref(null);
+const monthVsMonthChartCanvas = ref(null);
 
 // Chart instances
 let expenseVsIncomeChart = null;
 let categoryChart = null;
 let incomeChart = null;
+let monthVsMonthChart = null;
 
 const formatAmount = (amount) =>
   Number(amount).toLocaleString("en-IN", {
@@ -54,7 +56,7 @@ const incomeCategoriesPalette = [
 // Chart Configurations
 const chartDefaults = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   cutout: "70%",
   plugins: {
     legend: {
@@ -109,7 +111,7 @@ const expenseVsIncomeChartConfig = {
       ...chartDefaults.plugins,
       title: {
         ...chartDefaults.plugins.title,
-        text: "Income vs Expenses",
+        text: `Income vs Expenses - ${expenseStore.MONTHS[expenseStore.currentMonth]}`,
       },
       legend: {
         display: false,
@@ -147,6 +149,10 @@ const expenseChartConfig = {
         ...chartDefaults.plugins.title,
         text: "Expenses by Category",
       },
+      legend: {
+        ...chartDefaults.plugins.legend,
+        position: "right",
+      },
     },
   },
 };
@@ -179,6 +185,65 @@ const incomeChartConfig = {
   },
 };
 
+const monthVsMonthChartConfig = {
+  type: "line",
+  data: {
+    labels: Object.values(expenseStore.MONTHS),
+    datasets: [
+      {
+        label: "Income",
+        borderColor: colors.income,
+        backgroundColor: colors.income,
+        data: Object.values(expenseStore.groupByMonthTotal)?.map((month) => month.income) || [
+          2000, 2333, 2332,
+        ],
+        fill: false,
+        tension: 0.4,
+      },
+      {
+        label: "Expenses",
+        borderColor: colors.expense,
+        backgroundColor: colors.expense,
+        data: Object.values(expenseStore.groupByMonthTotal)?.map((month) => month.expense) || [],
+        fill: false,
+        tension: 0.4,
+      },
+    ],
+  },
+  options: {
+    ...chartDefaults,
+    plugins: {
+      ...chartDefaults.plugins,
+      title: {
+        ...chartDefaults.plugins.title,
+        text: "Monthly Trend - Income and Expenses",
+      },
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          title: function () {
+            return null;
+          },
+          label: function (context) {
+            let label = context.dataset.label || "";
+            if (context.raw !== null) {
+              label += ` - ₹${formatAmount(context.raw)}`;
+            }
+            return label;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+};
+
 // Lifecycle Hooks
 onMounted(() => {
   if (expenseVsIncomeChartCanvas.value) {
@@ -192,6 +257,10 @@ onMounted(() => {
   if (incomeChartCanvas.value) {
     incomeChart = new Chart(incomeChartCanvas.value, incomeChartConfig);
   }
+
+  if (monthVsMonthChartCanvas.value) {
+    monthVsMonthChart = new Chart(monthVsMonthChartCanvas.value, monthVsMonthChartConfig);
+  }
 });
 
 watch(
@@ -202,6 +271,7 @@ watch(
         expenseStore.totalIncome,
         expenseStore.totalExpense,
       ];
+      expenseVsIncomeChart.options.plugins.title.text = `Income vs Expenses - ${expenseStore.MONTHS[expenseStore.currentMonth]}`;
       expenseVsIncomeChart.update();
     }
     if (categoryChart) {
@@ -226,6 +296,7 @@ onUnmounted(() => {
   expenseVsIncomeChart?.destroy();
   categoryChart?.destroy();
   incomeChart?.destroy();
+  monthVsMonthChart?.destroy();
 });
 </script>
 
@@ -242,6 +313,10 @@ onUnmounted(() => {
     <div class="chart-card">
       <canvas ref="expenseVsIncomeChartCanvas"></canvas>
     </div>
+
+    <div class="chart-card">
+      <canvas ref="monthVsMonthChartCanvas"></canvas>
+    </div>
   </div>
 </template>
 
@@ -249,8 +324,8 @@ onUnmounted(() => {
 .charts-container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 2rem;
-  padding: 1.5rem;
+  gap: 1rem;
+  padding: 1rem;
 
   @media (max-width: 768px) {
     display: flex;
@@ -261,7 +336,7 @@ onUnmounted(() => {
 .chart-card {
   background: var(--color-surface);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow:
     0 4px 24px var(--shadow-color, rgba(26, 25, 24, 0.08)),
     0 1px 4px var(--shadow-color, rgba(26, 25, 24, 0.04));
@@ -273,6 +348,7 @@ onUnmounted(() => {
 }
 
 canvas {
-  max-height: 400px;
+  max-height: 350px;
+  min-height: 200px;
 }
 </style>

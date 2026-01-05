@@ -8,23 +8,8 @@ import { useExpenseStore } from "@/stores/expenseStore";
 const expenseStore = useExpenseStore();
 const showDashboard = ref(false);
 
-const MONTHS = {
-  1: "January",
-  2: "February",
-  3: "March",
-  4: "April",
-  5: "May",
-  6: "June",
-  7: "July",
-  8: "August",
-  9: "September",
-  10: "October",
-  11: "November",
-  12: "December",
-};
-
 const handleMonthChange = (val) => {
-  const monthKey = Object.keys(MONTHS).find((key) => MONTHS[key] === val);
+  const monthKey = Object.keys(expenseStore.MONTHS).find((key) => expenseStore.MONTHS[key] === val);
   expenseStore.setCurrentMonth(monthKey);
 };
 </script>
@@ -33,8 +18,8 @@ const handleMonthChange = (val) => {
   <header class="w-100 d-flex align-center justify-space-between pa-4">
     <h1 class="w-100">Expense Tracker</h1>
     <v-select
-      :items="Object.values(MONTHS)"
-      :model-value="MONTHS[expenseStore.currentMonth]"
+      :items="Object.values(expenseStore.MONTHS)"
+      :model-value="expenseStore.MONTHS[expenseStore.currentMonth]"
       @update:model-value="handleMonthChange"
       density="compact"
       prepend-inner-icon="mdi-calendar"
