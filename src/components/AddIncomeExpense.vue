@@ -1,13 +1,18 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useExpenseStore } from "@/stores/expenseStore";
 
 const expenseStore = useExpenseStore();
-const formData = ref({
+const props = defineProps(["editItem"]);
+const emit = defineEmits(["reset-edit"]);
+
+const emptyItem = {
   amount: null,
   description: "",
   selectedCategory: null,
-});
+};
+const formData = ref({ ...emptyItem });
+
 const addSection = ref(false);
 const incomeFlag = ref(false);
 const expenseFlag = ref(false);
@@ -51,18 +56,21 @@ const closeSection = () => {
   addSection.value = false;
   incomeFlag.value = false;
   expenseFlag.value = false;
+  emit("reset-edit");
 };
 
 const saveSection = (type) => {
-  console.log("formData", formData.value);
+  if (props.editItem) {
+    expenseStore.updateItem(formData.value);
+    closeSection();
+    return;
+  }
   expenseStore.addItem(formData.value, type);
   closeSection();
 };
 
 const resetForm = () => {
-  formData.value.amount = null;
-  formData.value.selectedCategory = null;
-  formData.value.description = "";
+  formData.value = { ...emptyItem };
 };
 
 const allowOnlyNumbers = (event) => {
@@ -70,6 +78,21 @@ const allowOnlyNumbers = (event) => {
     event.preventDefault();
   }
 };
+
+watch(
+  () => props.editItem,
+  (newVal) => {
+    if (newVal) {
+      if (newVal.type === "income") {
+        showAddSection("income", true);
+      } else if (newVal.type === "expense") {
+        showAddSection("expense", true);
+      }
+      formData.value = { ...newVal };
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -80,6 +103,7 @@ const allowOnlyNumbers = (event) => {
         variant="flat"
         size="large"
         min-width="160"
+        :disabled="props.editItem != null && Object.keys(props.editItem).length > 0"
         prepend-icon="mdi-tray-arrow-down"
         @click="showAddSection('income', true)"
       >
@@ -91,6 +115,7 @@ const allowOnlyNumbers = (event) => {
         variant="flat"
         size="large"
         min-width="160"
+        :disabled="props.editItem != null && Object.keys(props.editItem).length > 0"
         prepend-icon="mdi-tray-arrow-up"
         @click="showAddSection('expense', true)"
       >
@@ -186,7 +211,7 @@ const allowOnlyNumbers = (event) => {
             prepend-icon="mdi-check"
             @click="saveSection(sectionType)"
           >
-            Save {{ sectionTitle }}
+            {{ props.editItem ? "Edit " : "Save " }} {{ sectionTitle }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -372,11 +397,9 @@ const allowOnlyNumbers = (event) => {
 .transaction-card--income {
   .themed-input {
     :deep(.v-chip) {
-      @media (prefers-color-scheme: light) {
-        background: var(--color-surface);
-        color: var(--color-text-secondary);
-        border: 1px solid rgba(125, 155, 132, 0.4);
-      }
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+      border: 1px solid rgba(125, 155, 132, 0.4);
     }
   }
 }

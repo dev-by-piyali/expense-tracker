@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { useExpenseStore } from "@/stores/expenseStore";
 
 const expenseStore = useExpenseStore();
+const emit = defineEmits(["edit-item"]);
 
 const headers = [
   { title: "Type", key: "type", width: "80px" },
@@ -33,6 +34,14 @@ const formatAmount = (amount) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+const deleteTransaction = (item) => {
+  expenseStore.removeItem(item);
+};
+
+const editTransaction = (item) => {
+  emit("edit-item", item);
+};
 </script>
 
 <template>
@@ -122,8 +131,16 @@ const formatAmount = (amount) =>
           <v-icon icon="mdi-dots-vertical" size="18" />
           <v-menu activator="parent">
             <v-list density="compact" rounded="lg" elevation="3">
-              <v-list-item prepend-icon="mdi-pencil-outline" title="Edit" />
-              <v-list-item prepend-icon="mdi-delete-outline" title="Delete" />
+              <v-list-item
+                prepend-icon="mdi-pencil-outline"
+                title="Edit"
+                @click="editTransaction(item)"
+              />
+              <v-list-item
+                prepend-icon="mdi-delete-outline"
+                title="Delete"
+                @click="deleteTransaction(item)"
+              />
             </v-list>
           </v-menu>
         </v-btn>

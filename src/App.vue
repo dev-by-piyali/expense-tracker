@@ -7,10 +7,19 @@ import { useExpenseStore } from "@/stores/expenseStore";
 
 const expenseStore = useExpenseStore();
 const showDashboard = ref(false);
+const editItem = ref(null);
 
 const handleMonthChange = (val) => {
   const monthKey = Object.keys(expenseStore.MONTHS).find((key) => expenseStore.MONTHS[key] === val);
   expenseStore.setCurrentMonth(monthKey);
+};
+
+const handleEditTransaction = (item) => {
+  editItem.value = item;
+};
+
+const resetEditItem = () => {
+  editItem.value = null;
 };
 </script>
 
@@ -35,8 +44,8 @@ const handleMonthChange = (val) => {
   </header>
 
   <main v-if="!showDashboard" class="main-section flex-grow-1 ga-4 mt-6">
-    <AddIncomeExpense />
-    <ExpenseHistory />
+    <AddIncomeExpense :edit-item="editItem" @reset-edit="resetEditItem" />
+    <ExpenseHistory @edit-item="handleEditTransaction" />
   </main>
   <main v-else class="flex-grow-1 ga-4 mt-6 w-100">
     <Dashboard />

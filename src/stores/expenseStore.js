@@ -139,9 +139,24 @@ export const useExpenseStore = defineStore("expenseStore", () => {
     combinedList.value.push(newTransaction);
   };
 
-  const removeItem = (value, type) => {};
+  const removeItem = (value) => {
+    const index = combinedList.value.findIndex((item) => item.id === value.id);
+    if (index !== -1) {
+      combinedList.value.splice(index, 1);
+    }
+  };
 
-  const updateItem = (value, type) => {};
+  const updateItem = (value) => {
+    const index = combinedList.value.findIndex((item) => item.id === value.id);
+    if (index !== -1) {
+      combinedList.value[index] = {
+        ...combinedList.value[index],
+        amount: Number(value.amount),
+        description: value.description || "",
+        selectedCategory: value.selectedCategory || "",
+      };
+    }
+  };
 
   return {
     MONTHS,
